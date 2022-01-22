@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 
 
@@ -48,24 +50,40 @@ namespace blogPostMakeUpdateCsharp
             {
                 Console.WriteLine("enter title for this post: \n");
                 string title = Console.ReadLine();
+       
                 Console.WriteLine("enter body of this post: \n");
                 string body = Console.ReadLine();
 
-                var blogP = new Post
-                {
-                    dateTime = DateTime.Now,
+
+
+            var blogP = new Post
+            {
+                    
+                dateTime = DateTime.Now,
                     fileName = "C:/Users/hlucy/Documents/blogPostMakeUpdateCsharp/blogPostMakeUpdateCsharp/json1.json",
                     title = title,
                     body = body
                 };
 
-                string jsonString = JsonSerializer.Serialize(blogP);
+
+            var filePath = blogP.fileName;
+            var jsonData = System.IO.File.ReadAllText(filePath);
+            //read the content of the exisiting json file
+
+            var blogPostList = JsonConvert.DeserializeObject<List<Post>>(jsonData)?? new List<Post>(); //this is broken
+            //If the file exists and contains info, then put it into list of post objects, else create me a new blank list
+
+            blogPostList.Add(blogP);
+            //Add my new post object to the list
+
+
+            jsonData = System.Text.Json.JsonSerializer.Serialize(blogPostList);
                 //converts value in the blogP object into a json object
 
-                File.WriteAllText(blogP.fileName, jsonString);
+            System.IO.File.WriteAllText(filePath, jsonData);
                 //writes the newly created json object to the json file provided
 
-                Console.WriteLine(File.ReadAllText(blogP.fileName));
+            Console.WriteLine(File.ReadAllText(blogP.fileName));
                 //displays content of the file
 
             }

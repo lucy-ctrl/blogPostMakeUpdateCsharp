@@ -10,9 +10,14 @@ namespace blogPostMakeUpdateCsharp
 {
     public class Post
     {
+		[JsonInclude]
 		public DateTime dateTime { get; set; }
+		[JsonInclude]
 		public string title { get; set; }
+		
+		[JsonInclude]
 		public string body { get; set; }
+		
 		public string fileName { get; set; }
 
 		public void editExistingPost(string fileName, string title)
